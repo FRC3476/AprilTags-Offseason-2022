@@ -1,12 +1,10 @@
 import cv2
 
-import pose
-
 light_blue = (255, 120, 60)
 width_px = 4
 
 
-def annotate(frame, detection):
+def annotate(frame, detection, n_pose):
     corners = detection.corners
     corner1 = (int(corners[0][0]), int(corners[0][1]))
     corner2 = (int(corners[1][0]), int(corners[1][1]))
@@ -18,9 +16,6 @@ def annotate(frame, detection):
     cv2.line(frame, corner2, corner3, light_blue, width_px)
     cv2.line(frame, corner3, corner4, light_blue, width_px)
     cv2.line(frame, corner4, corner1, light_blue, width_px)
-
-    # Find coordinates of tag (normalized to 0-1) (Orgin is left, bottom, far)
-    n_pose = pose.normalize_pose(detection)
 
     cv2.putText(frame, "x: " + str(n_pose[0]), (int(corners[1][0] + 50), int(corners[1][1])), cv2.FONT_HERSHEY_SIMPLEX,
                 1, (0, 0, 0))

@@ -15,5 +15,9 @@ def log_looptime(time):
     vision_table.getEntry("Vision_Looptime").setValue(time)
 
 
+def log_camera_open(is_open):
+    vision_table.getEntry("Is Camera Open").setValue(is_open)
+
+
 def flush():
     NetworkTables.getDefault().flush()

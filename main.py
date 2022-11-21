@@ -13,15 +13,13 @@ camera.set(cv2.CAP_PROP_EXPOSURE, constants.CAMERA_EXPOSURE)
 
 tag_detector = Detector(families="tag36h11")
 
-# Check if camera is connected
-if not camera.isOpened():
-    raise IOError("Cannot access camera")
-
 # Main Control Loop
 while True:
 
     # Start of profiling
     start_time = time.time()
+
+    network.log_camera_open(camera.isOpened())
 
     ret, frame = camera.read()
 

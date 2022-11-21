@@ -21,4 +21,4 @@ def normalize_pose(detection):
     y_pos = (detection.pose_t[1] + offsets[2]) / offsets[3]
     z_pos = (detection.pose_t[2] + offsets[4]) / offsets[5]
 
-    return x_pos, y_pos, z_pos
+    return round(float(x_pos), 3), round(float(y_pos), 3), round(float(z_pos), 3)

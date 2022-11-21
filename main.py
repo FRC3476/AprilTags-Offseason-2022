@@ -1,21 +1,27 @@
+import time
+
 import cv2
 from pupil_apriltags import Detector
 
+import constants
 import graphics
+import network
+import pose
 
-camera = cv2.VideoCapture(1)
+camera = cv2.VideoCapture(constants.CAMERA_PORT)
+camera.set(cv2.CAP_PROP_EXPOSURE, constants.CAMERA_EXPOSURE)
 
-tag_detector = Detector(families="tagStandard41h12", quad_decimate=1,
-                        refine_edges=1, decode_sharpening=.25, nthreads=8)
+tag_detector = Detector(families="tag36h11")
 
 # Check if camera is connected
 if not camera.isOpened():
     raise IOError("Cannot access camera")
 
+# Main Control Loop
 while True:
 
     # Start of profiling
-    # start_time = time.time()
+    start_time = time.time()
 
     ret, frame = camera.read()
 
@@ -27,18 +33,24 @@ while True:
                                      camera_params=(2491, 1401, 640, 360), tag_size=.02)
 
     for detection in detections:
-        graphics.annotate(frame, detection)
+        n_pose = pose.normalize_pose(detection)
 
-    cv2.imshow("View", frame)
+        if constants.ENABLE_GRAPHICS:
+            graphics.annotate(frame, detection, n_pose)
 
-    c = cv2.waitKey(1)
+        network.log_pos(detection.tag_id, n_pose[0], n_pose[1], n_pose[2])
 
-    # breaks out of loop if esc key is pressed
-    if c == 27:
-        break
+    if constants.ENABLE_GRAPHICS:
+        cv2.imshow("View", frame)
+        c = cv2.waitKey(1)
+
+        # breaks out of loop if esc key is pressed
+        if c == 27:
+            break
 
     # End of profiling
-    # print("Loop Time: " + str(time.time() - start_time))
+    network.log_looptime(time.time() - start_time)
+    network.flush()
 
 camera.release()
 cv2.destryAllWindows()

@@ -28,7 +28,7 @@ while True:
 
     # Search for tags
     detections = tag_detector.detect(img=gray_frame, estimate_tag_pose=True,
-                                     camera_params=(2491, 1401, 640, 360), tag_size=.02)
+                                     camera_params=(646, 645, 640, 400), tag_size=.02)
 
     for detection in detections:
         n_pose = pose.normalize_pose(detection)

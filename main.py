@@ -1,3 +1,4 @@
+import threading
 import time
 
 import cv2
@@ -5,6 +6,7 @@ from pupil_apriltags import Detector
 
 import constants
 import graphics
+import gyro
 import network
 import pose
 
@@ -12,6 +14,10 @@ camera = cv2.VideoCapture(constants.CAMERA_PORT)
 camera.set(cv2.CAP_PROP_EXPOSURE, constants.CAMERA_EXPOSURE)
 
 tag_detector = Detector(families="tag36h11")
+
+r_gyro = gyro.Gyro()
+gyro_thread = threading.Thread(target=r_gyro.run_gyro)
+gyro_thread.start()
 
 # Main Control Loop
 while True:
@@ -44,6 +50,7 @@ while True:
 
         # breaks out of loop if esc key is pressed
         if c == 27:
+            o_gyro.stop()
             break
 
     # End of profiling

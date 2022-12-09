@@ -37,7 +37,7 @@ while True:
                                      camera_params=(646, 645, 640, 400), tag_size=.02)
 
     for detection in detections:
-        n_pose = pose.normalize_pose(detection)
+        n_pose = pose.normalize_tag(detection, r_gyro.gyro_angle_y)
 
         if constants.ENABLE_GRAPHICS:
             graphics.annotate(frame, detection, n_pose)
@@ -50,7 +50,7 @@ while True:
 
         # breaks out of loop if esc key is pressed
         if c == 27:
-            o_gyro.stop()
+            r_gyro.stop()
             break
 
     # End of profiling

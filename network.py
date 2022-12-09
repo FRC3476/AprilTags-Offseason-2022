@@ -1,7 +1,7 @@
 from _pynetworktables import NetworkTables
 
 # Will need to set with ip of roboRIO when on the robot
-NetworkTables.initialize()
+NetworkTables.initialize(server="localhost")
 vision_table = NetworkTables.getDefault().getTable("Vision")
 
 
